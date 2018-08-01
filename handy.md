@@ -122,8 +122,41 @@ kdi_dtrace_state/W 1
 truss -u 'libzfs::zfs_unmount*' -u ...
 truss -fT open zfs recv
 
+## dbx debugging
 
+1. find dbx location
+/net/tufnel.us.oracle.com/export/SUNWspro/i386/SUNWspro/developerstudio12.6/bin/dbx
 
+2. compile source code with debug info 
+export STRIPSTABS_KEEP_STABS=1
+
+dmake DEBUGFORMAT="-xdebugformat=dwarf" COPTFLAG="-g" COPTFLAG64="-g" install
+
+3. copy source code onto system
+Note: on ak, we should run "mount -o remount,rw /" to enable write
+permission.
+
+4. attach to process
+For example: .../dbx
+
+dbx> pgrep repld
+
+dbx> attach <pid>
+
+5. link to source directory
+For example:
+
+pathmap -c /export/ws /net/opensores/export/ws
+
+6. set break point
+For example:
+
+stop in key_hdl_to_zc
+
+7. print data structure
+where
+
+print -L *zc
 
 
 ---
